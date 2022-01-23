@@ -38,7 +38,7 @@ public class InvTest implements CommandExecutor {
                     "Option 3"
                 )
             )
-            .setItem(11,
+            .setItem(12,
                 new EnumButton(
                     new CustomItem(Material.TNT),
                     UtilPlugin.exampleEnum,
