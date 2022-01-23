@@ -17,6 +17,7 @@ import org.bukkit.util.Consumer;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings({"unused", "StringConcatenationInLoop", "UnusedReturnValue"})
 @Accessors(chain = true)
@@ -133,4 +134,12 @@ public final class CustomInventory {
         for (int i = (size - 10); i<(size - 1); i++) setItem(i, item);
         return this;
     }
+    
+    public static Optional<CustomInventory> getInventory(SantioUtils utils, Player player) {
+        return utils.getInventories().values()
+                .stream()
+                .filter((CustomInventory i) -> i.isOpen(player))
+                .findFirst();
+    }
+    
 }

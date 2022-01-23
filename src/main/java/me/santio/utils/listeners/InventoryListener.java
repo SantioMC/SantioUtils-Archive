@@ -22,11 +22,7 @@ public class InventoryListener implements Listener {
     
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        Optional<CustomInventory> inventory = utils.getInventories().values()
-                .stream()
-                .filter((CustomInventory i) -> i.isOpen((Player) event.getPlayer()))
-                .findFirst();
-        
+        Optional<CustomInventory> inventory = CustomInventory.getInventory(utils, (Player) event.getPlayer());
         event.getPlayer().removeMetadata("sutils_inventory_open", utils.getPlugin());
         inventory.ifPresent((i) -> {
             if (i.isDeleteOnClose()) i.delete();
@@ -39,11 +35,7 @@ public class InventoryListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         
         // Find which inventory the player has open
-        Optional<CustomInventory> inventory = utils.getInventories().values()
-                .stream()
-                .filter((CustomInventory i) -> i.isOpen(player))
-                .findFirst();
-    
+        Optional<CustomInventory> inventory = CustomInventory.getInventory(utils, player);
         if (!inventory.isPresent()) return;
         
         // Get item

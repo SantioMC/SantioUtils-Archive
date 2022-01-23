@@ -6,6 +6,7 @@ import me.santio.utils.CustomItem;
 import me.santio.utils.inventories.CustomInventory;
 import me.santio.utils.inventories.buttons.EnumButton;
 import me.santio.utils.inventories.buttons.ListButton;
+import me.santio.utils.inventories.buttons.StringButton;
 import me.santio.utils.inventories.buttons.ToggleButton;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -44,6 +45,14 @@ public class InvTest implements CommandExecutor {
                     UtilPlugin.exampleEnum,
                     ExampleEnum.class,
                     (val) -> UtilPlugin.exampleEnum = val
+                )
+            )
+            .setItem(13,
+                new StringButton(
+                    UtilPlugin.santioUtils,
+                    new CustomItem(Material.WRITABLE_BOOK),
+                    UtilPlugin.exampleString,
+                    (val) -> UtilPlugin.exampleString = val
                 )
             )
             .open((Player) sender);

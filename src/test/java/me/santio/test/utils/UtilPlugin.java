@@ -10,6 +10,7 @@ public class UtilPlugin extends JavaPlugin {
     public static SantioUtils santioUtils;
     
     public static boolean exampleBoolean = false;
+    public static int exampleInteger = 1;
     public static String exampleString = "Option 1";
     public static ExampleEnum exampleEnum = ExampleEnum.MySQL;
     
