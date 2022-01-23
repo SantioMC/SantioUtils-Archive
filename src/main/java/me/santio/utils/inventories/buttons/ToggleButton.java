@@ -24,7 +24,6 @@ public class ToggleButton extends Button {
     public void onClick(InventoryClickEvent event) {
         state = !state;
         this.updated.accept(state);
-        Bukkit.broadcastMessage("State: "+state);
     }
     
     @Override
