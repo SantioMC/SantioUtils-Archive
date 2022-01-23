@@ -16,14 +16,7 @@ public class QueryTest implements CommandExecutor {
             UtilPlugin.santioUtils.queryUtils.awaitMessage((Player) sender, (res) -> sender.sendMessage("Response: "+res));
         } else if (args[0].equalsIgnoreCase("int")) {
             sender.sendMessage("Please type in an integer!");
-            UtilPlugin.santioUtils.queryUtils.awaitMessage((Player) sender, (res) -> sender.sendMessage("Response: "+res), (query) -> {
-                try {
-                    Integer.parseInt(query);
-                    return true;
-                } catch(NumberFormatException e) {
-                    return false;
-                }
-            });
+            UtilPlugin.santioUtils.queryUtils.awaitMessage((Player) sender, (res) -> sender.sendMessage("Response: "+res), UtilPlugin.santioUtils::isInteger);
         }
         
         return true;
