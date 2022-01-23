@@ -1,0 +1,9 @@
+main: me.santio.test.utils.UtilPlugin
+name: UtilPlugin
+api-version: 1.16
+version: ${plugin.version}
+description: Plugin used to test Utils
+commands:
+  invtest:
+    description: Test Command
+    permission: utils.test.inv
