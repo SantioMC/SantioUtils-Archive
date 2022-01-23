@@ -2,7 +2,6 @@ package me.santio.utils.listeners;
 
 import me.santio.utils.SantioUtils;
 import me.santio.utils.inventories.CustomInventory;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

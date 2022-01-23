@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public final class ChatUtils {
-    private static Pattern hexPattern = Pattern.compile("&#[a-fA-F0-9]{6}");
+    private static final Pattern hexPattern = Pattern.compile("&#[a-fA-F0-9]{6}");
     
     public static String tacc(String text) {
         if(Bukkit.getVersion().contains("1.16") || Bukkit.getVersion().contains("1.17")) {

@@ -7,3 +7,6 @@ commands:
   invtest:
     description: Test Command
     permission: utils.test.inv
+  querytest:
+    description: Test Command
+    permission: utils.test.query

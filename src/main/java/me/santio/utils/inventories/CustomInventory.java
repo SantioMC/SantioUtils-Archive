@@ -18,7 +18,7 @@ import org.bukkit.util.Consumer;
 import java.util.HashMap;
 import java.util.List;
 
-@SuppressWarnings({"unused", "StringConcatenationInLoop", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"unused", "StringConcatenationInLoop", "UnusedReturnValue"})
 @Accessors(chain = true)
 public final class CustomInventory {
     @Getter private final SantioUtils utils;

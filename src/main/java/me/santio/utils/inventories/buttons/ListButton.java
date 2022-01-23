@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import java.util.*;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 @Accessors(chain = true)
 public class ListButton extends Button {
     
