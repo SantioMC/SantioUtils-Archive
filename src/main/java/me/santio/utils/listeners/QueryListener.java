@@ -8,11 +8,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class QueryListener implements Listener {
     
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onChat(AsyncPlayerChatEvent event) {
+    private void onChat(AsyncPlayerChatEvent event) {
         if (!QueryUtils.getQueries().containsKey(event.getPlayer().getUniqueId())) return;
         event.setCancelled(true);
         
@@ -24,6 +25,11 @@ public class QueryListener implements Listener {
         
         if (query.getFilter() != null && !query.getFilter().test(message)) player.sendMessage("§cInvalid query! Please try again...");
         else query.respond(message);
+    }
+    
+    @EventHandler
+    private void onQuit(PlayerQuitEvent event) {
+        if (QueryUtils.getQueries().containsKey(event.getPlayer().getUniqueId())) QueryUtils.getQueries().get(event.getPlayer().getUniqueId()).delete();
     }
     
 }
