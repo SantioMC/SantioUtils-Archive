@@ -29,6 +29,7 @@ public final class QueryUtils {
     }
     
     public void awaitMessage(Player player, Consumer<String> response, Predicate<String> filter, int delay) {
+        if (queries.containsKey(player.getUniqueId())) queries.get(player.getUniqueId()).delete();
         queries.put(player.getUniqueId(), new Query(player.getUniqueId(), response, filter, new BukkitRunnable() {
             @Override public void run() {
                 if (delay <= 0) return;
