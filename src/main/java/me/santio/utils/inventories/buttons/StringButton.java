@@ -42,7 +42,7 @@ public class StringButton extends Button {
             }
             inventory.get().setDeleteOnClose(delete);
             inventory.get().open((Player) event.getWhoClicked());
-            inventory.get().updateLore(event.getSlot(), getLore());
+            inventory.get().updateLore(event.getSlot(), getCompleteLore());
         }));
     }
     

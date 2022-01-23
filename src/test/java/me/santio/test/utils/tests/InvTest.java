@@ -4,10 +4,7 @@ import me.santio.test.utils.ExampleEnum;
 import me.santio.test.utils.UtilPlugin;
 import me.santio.utils.CustomItem;
 import me.santio.utils.inventories.CustomInventory;
-import me.santio.utils.inventories.buttons.EnumButton;
-import me.santio.utils.inventories.buttons.ListButton;
-import me.santio.utils.inventories.buttons.StringButton;
-import me.santio.utils.inventories.buttons.ToggleButton;
+import me.santio.utils.inventories.buttons.*;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -54,6 +51,14 @@ public class InvTest implements CommandExecutor {
                     UtilPlugin.exampleString,
                     (val) -> UtilPlugin.exampleString = val
                 )
+            )
+            .setItem(14,
+                new NumberButton(
+                    UtilPlugin.santioUtils,
+                    new CustomItem(Material.SNOWBALL),
+                    UtilPlugin.exampleInteger,
+                    (val) -> UtilPlugin.exampleInteger = val
+                ).setDescription("Sets something to something and a number, yw, now here is a lot of text for description to really test out that wrapping feature man :fire:")
             )
             .open((Player) sender);
         

@@ -71,7 +71,7 @@ public final class CustomInventory {
         return setItem(slot, item, (e) -> {
             e.setCancelled(true);
             item.onClick(e);
-            updateLore(slot, item.getLore());
+            updateLore(slot, item.getCompleteLore());
         });
     }
     
@@ -94,7 +94,7 @@ public final class CustomInventory {
         if (meta != null) {
             String id = "event-" + getEvents().size();
             utils.NBTUtils.set(meta, "sutils_id", id);
-            meta.setLore(item.getLore());
+            meta.setLore(item.getCompleteLore());
             itemStack.setItemMeta(meta);
             getEvents().put(id, event);
         }

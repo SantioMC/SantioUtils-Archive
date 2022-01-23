@@ -1,6 +1,7 @@
 package me.santio.utils;
 
 import net.md_5.bungee.api.ChatColor;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 
 import java.util.regex.Matcher;
@@ -28,5 +29,9 @@ public final class ChatUtils {
     
     public static String toID(String text) {
         return strip(tacc(text)).replaceAll(" ", "_").toLowerCase();
+    }
+    
+    public static String[] loreWrap(String description) {
+        return WordUtils.wrap(description, 40).split("\n");
     }
 }
