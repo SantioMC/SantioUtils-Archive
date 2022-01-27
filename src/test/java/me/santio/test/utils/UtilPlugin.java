@@ -20,6 +20,9 @@ public class UtilPlugin extends JavaPlugin {
         santioUtils = new SantioUtils(this);
         getServer().getPluginCommand("invtest").setExecutor(new InvTest());
         getServer().getPluginCommand("querytest").setExecutor(new QueryTest());
+        
+        getServer().getPluginManager().registerEvents(new ExampleReload(), this);
+        santioUtils.supportReloads();
     }
     
 }
