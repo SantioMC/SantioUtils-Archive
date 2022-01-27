@@ -2,7 +2,6 @@ package me.santio.utils;
 
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +11,7 @@ public final class ChatUtils {
     private static final Pattern hexPattern = Pattern.compile("&#[a-fA-F0-9]{6}");
     
     public static String tacc(String text) {
-        if(Bukkit.getVersion().contains("1.16") || Bukkit.getVersion().contains("1.17")) {
+        if(VersionUtils.getMajor() >= 16) {
             Matcher match = hexPattern.matcher(text);
             while (match.find()) {
                 String color = text.substring(match.start(), match.end());
