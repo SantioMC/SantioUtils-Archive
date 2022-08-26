@@ -21,7 +21,10 @@ public class QueryListener implements Listener {
         String message = ChatUtils.strip(event.getMessage());
         Query query = QueryUtils.getQueries().get(player.getUniqueId());
         
-        if (message.equalsIgnoreCase("cancel") || message.equalsIgnoreCase("stop")) query.respond(null);
+        if (message.equalsIgnoreCase("cancel") || message.equalsIgnoreCase("stop")) {
+            query.respond(null);
+            return;
+        }
         
         if (query.getFilter() != null && !query.getFilter().test(message)) player.sendMessage("§cInvalid query! Please try again...");
         else query.respond(message);
