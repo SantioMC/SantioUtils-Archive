@@ -37,7 +37,7 @@ public final class QueryUtils {
                 if (!player.isOnline()) return;
                 player.sendMessage("§7The query has automatically been cancelled!");
             }
-        }.runTaskLater(utils.getPlugin(), delay*10L)));
+        }.runTaskLater(utils.getPlugin(), delay*20L)));
     }
     
 }
