@@ -14,12 +14,11 @@ class InventoryListener(private val scheduler: AsyncUtils): Listener {
     @EventHandler
     private fun onInventoryClose(event: InventoryCloseEvent) {
         if (event.player !is Player) return
+        val inventory = CustomInventory.getOpenInventory(event.player as Player) ?: return
 
         scheduler.delay({
             if (event.viewers.contains(event.player)) return@delay
-            SantioUtils.inventories.forEach {
-                if (it.isOpen(event.player.uniqueId)) it.close(event.player as Player)
-            }
+            inventory.close(event.player as Player)
         }, 1)
     }
 

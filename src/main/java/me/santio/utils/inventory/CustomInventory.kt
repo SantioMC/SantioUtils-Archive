@@ -17,6 +17,18 @@ import java.util.function.Function
 open class CustomInventory @JvmOverloads constructor(open val size: Int, var name: String = "Inventory") {
     constructor(inventory: CustomInventory): this(inventory.size, inventory.name)
 
+    companion object {
+        @JvmStatic
+        fun getOpenInventory(player: Player): CustomInventory? {
+            for (inventory in SantioUtils.inventories) {
+                if (inventory.isOpen(player)) {
+                    return inventory
+                }
+            }
+            return null
+        }
+    }
+
     private var deleteOnClose: Boolean = true
     protected val opened: MutableSet<UUID> = mutableSetOf()
     protected var inventory: Inventory = Bukkit.createInventory(null, size(), name.colored())
