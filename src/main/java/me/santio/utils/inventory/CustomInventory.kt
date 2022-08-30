@@ -38,7 +38,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun deleteOnClose() = deleteOnClose
 
     fun onClick(event: InventoryClickEvent) {
-        onClick[event.slot]?.accept(event)
+        onClick[event.slot]?.accept(event) ?: run { event.isCancelled = true }
     }
 
     fun rename(name: String): CustomInventory {
