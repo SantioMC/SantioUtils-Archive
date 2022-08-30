@@ -5,7 +5,7 @@ class Slots(private val slots: MutableSet<Int>) {
     companion object {
 
         @JvmStatic
-        val ALL: Slots = rect(0, 9*9)
+        val ALL: Slots = rect(0, 9*9 - 1)
 
         @JvmStatic
         val NONE: Slots = Slots(mutableSetOf())

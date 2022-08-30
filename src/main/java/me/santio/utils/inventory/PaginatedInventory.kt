@@ -1,5 +1,6 @@
 package me.santio.utils.inventory
 
+import me.santio.utils.SantioUtils
 import me.santio.utils.item.CustomItem
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -13,7 +14,11 @@ class PaginatedInventory(
     inv: CustomInventory
 ): CustomInventory(inv.rows(), inv.name) {
 
-    init { import(inv.export()) }
+    init {
+        import(inv.export())
+        inv.delete()
+        SantioUtils.inventories.add(this)
+    }
 
     private var slots: Slots = Slots.ALL
     private var items: MutableList<ItemStack> = mutableListOf()
@@ -32,7 +37,7 @@ class PaginatedInventory(
 
         // Paginate items
         val paginatedItems = items.subList((page - 1) * slots.size(), (page * slots.size()).coerceAtMost(items.size))
-        paginatedItems.forEachIndexed { index, item -> slots.get(index - 1)?.let { set(it, item) }}
+        paginatedItems.forEachIndexed { index, item -> slots.get(index)?.let { set(it, item) }}
         onClick = events[page] ?: mutableMapOf()
 
         // Add back and forward buttons

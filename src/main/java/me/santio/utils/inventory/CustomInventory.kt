@@ -1,5 +1,6 @@
 package me.santio.utils.inventory
 
+import me.santio.utils.SantioUtils
 import me.santio.utils.item.CustomItem
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -15,6 +16,9 @@ import java.util.function.Function
 open class CustomInventory @JvmOverloads constructor(open val size: Int, var name: String = "Inventory") {
     constructor(inventory: CustomInventory): this(inventory.size, inventory.name)
 
+    init { SantioUtils.inventories.add(this) }
+
+    private var deleteOnClose: Boolean = true
     protected val opened: MutableSet<UUID> = mutableSetOf()
     protected var inventory: Inventory = Bukkit.createInventory(null, size(), name)
     protected var onClick: MutableMap<Int, Consumer<InventoryClickEvent>> = mutableMapOf()
@@ -25,6 +29,13 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     fun isOpen(player: Player): Boolean = isOpen(player.uniqueId)
     fun isOpen(uuid: UUID): Boolean = opened.contains(uuid)
+
+    fun deleteOnClose(deleteOnClose: Boolean): CustomInventory {
+        this.deleteOnClose = deleteOnClose
+        return this
+    }
+
+    fun deleteOnClose() = deleteOnClose
 
     fun onClick(event: InventoryClickEvent) {
         onClick[event.slot]?.accept(event)
@@ -131,6 +142,11 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
             if (it.openInventory == inventory) it.closeInventory()
             opened.remove(it.uniqueId)
         }
+        if (deleteOnClose) delete()
+    }
+
+    fun delete() {
+        SantioUtils.inventories.remove(this)
     }
 
     @JvmOverloads
