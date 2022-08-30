@@ -2,6 +2,7 @@ package me.santio.utils.inventory
 
 import me.santio.utils.SantioUtils
 import me.santio.utils.item.CustomItem
+import me.santio.utils.text.colored
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -18,7 +19,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     private var deleteOnClose: Boolean = true
     protected val opened: MutableSet<UUID> = mutableSetOf()
-    protected var inventory: Inventory = Bukkit.createInventory(null, size(), name)
+    protected var inventory: Inventory = Bukkit.createInventory(null, size(), name.colored())
     protected var onClick: MutableMap<Int, Consumer<InventoryClickEvent>> = mutableMapOf()
 
     fun rows(): Int = if (size % 9 == 0) size / 9 else size
@@ -41,7 +42,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     fun rename(name: String): CustomInventory {
         this.name = name
-        inventory = Bukkit.createInventory(null, size(), name)
+        inventory = Bukkit.createInventory(null, size(), name.colored())
         open(*opened.mapNotNull { Bukkit.getPlayer(it) }.toTypedArray())
         return this
     }
