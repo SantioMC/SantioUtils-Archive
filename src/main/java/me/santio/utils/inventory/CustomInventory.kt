@@ -128,12 +128,13 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         return this
     }
 
-    fun open(vararg players: Player) {
+    fun open(vararg players: Player): CustomInventory {
         players.forEach {
             it.openInventory(inventory)
             opened.add(it.uniqueId)
         }
         SantioUtils.inventories.add(this)
+        return this
     }
 
     fun close(vararg players: Player) {
