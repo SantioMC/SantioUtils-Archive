@@ -6,8 +6,10 @@ import me.santio.utils.text.colored
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.PlayerInventory
 import java.awt.Color
 import java.util.*
 import java.util.function.Consumer
@@ -150,7 +152,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     fun open(vararg players: Player): CustomInventory {
         players.forEach {
-            if (it.openInventory != it.inventory) SantioUtils.switching.add(it.uniqueId)
+            if (it.openInventory.topInventory !is PlayerInventory) SantioUtils.switching.add(it.uniqueId)
             it.openInventory(inventory)
             opened.add(it.uniqueId)
         }

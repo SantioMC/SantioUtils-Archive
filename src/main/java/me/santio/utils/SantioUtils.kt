@@ -15,7 +15,7 @@ class SantioUtils(plugin: JavaPlugin) {
     }
 
     init {
-        plugin.server.pluginManager.registerEvents(InventoryListener(AsyncUtils(plugin)), plugin)
+        plugin.server.pluginManager.registerEvents(InventoryListener, plugin)
         plugin.server.pluginManager.registerEvents(QueryListener, plugin)
     }
 
