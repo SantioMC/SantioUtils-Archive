@@ -16,8 +16,6 @@ import java.util.function.Function
 open class CustomInventory @JvmOverloads constructor(open val size: Int, var name: String = "Inventory") {
     constructor(inventory: CustomInventory): this(inventory.size, inventory.name)
 
-    init { SantioUtils.inventories.add(this) }
-
     private var deleteOnClose: Boolean = true
     protected val opened: MutableSet<UUID> = mutableSetOf()
     protected var inventory: Inventory = Bukkit.createInventory(null, size(), name)
@@ -135,6 +133,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
             it.openInventory(inventory)
             opened.add(it.uniqueId)
         }
+        SantioUtils.inventories.add(this)
     }
 
     fun close(vararg players: Player) {

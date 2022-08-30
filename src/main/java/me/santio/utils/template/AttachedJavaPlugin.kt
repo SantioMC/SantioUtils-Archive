@@ -12,10 +12,10 @@ abstract class AttachedJavaPlugin : JavaPlugin() {
     }
 
     companion object {
-        @Getter
-        private var utils: SantioUtils? = null
+        @JvmStatic
+        var utils: SantioUtils? = null
 
-        @Getter
-        private var scheduler: AsyncUtils? = null
+        @JvmStatic
+        var scheduler: AsyncUtils? = null
     }
 }
