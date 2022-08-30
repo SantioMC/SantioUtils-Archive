@@ -1,6 +1,5 @@
 package me.santio.test.utils;
 
-import kotlin.Pair;
 import me.santio.utils.inventory.CustomInventory;
 import me.santio.utils.inventory.Slots;
 import me.santio.utils.item.CustomItem;
