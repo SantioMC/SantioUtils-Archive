@@ -86,6 +86,19 @@ class CustomItem @JvmOverloads constructor(
         return this
     }
 
+    fun hideNBT(): CustomItem {
+        toggleFlag(ItemFlag.HIDE_ATTRIBUTES, true)
+        return this
+    }
+
+    @JvmOverloads
+    fun toggleFlag(flag: ItemFlag, force: Boolean = false): CustomItem {
+        val meta = itemMeta ?: throw IllegalStateException("You can not toggle flag on air!")
+        if (meta.hasItemFlag(flag) && !force) meta.removeItemFlags(flag) else meta.addItemFlags(flag)
+        itemMeta = meta
+        return this
+    }
+
     @JvmOverloads
     fun glowing(state: Boolean = true): CustomItem {
         val meta = itemMeta ?: throw IllegalStateException("You can not add glowing to air!")
