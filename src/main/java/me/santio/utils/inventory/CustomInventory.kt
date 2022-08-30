@@ -12,6 +12,7 @@ import java.awt.Color
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
+import kotlin.math.exp
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 open class CustomInventory @JvmOverloads constructor(open val size: Int, var name: String = "Inventory") {
@@ -37,6 +38,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun rows(): Int = if (size % 9 == 0) size / 9 else size
     fun size(): Int = rows() * 9
     fun items(): List<ItemStack> = inventory.contents.toList()
+    fun getBukkitInventory() = inventory
 
     fun isOpen(player: Player): Boolean = isOpen(player.uniqueId)
     fun isOpen(uuid: UUID): Boolean = opened.contains(uuid)
@@ -54,8 +56,13 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     fun rename(name: String): CustomInventory {
         this.name = name
+
+        val export = export()
         inventory = Bukkit.createInventory(null, size(), name.colored())
+
+        import(export)
         open(*opened.mapNotNull { Bukkit.getPlayer(it) }.toTypedArray())
+
         return this
     }
 
@@ -143,6 +150,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     fun open(vararg players: Player): CustomInventory {
         players.forEach {
+            if (it.openInventory != it.inventory) SantioUtils.switching.add(it.uniqueId)
             it.openInventory(inventory)
             opened.add(it.uniqueId)
         }

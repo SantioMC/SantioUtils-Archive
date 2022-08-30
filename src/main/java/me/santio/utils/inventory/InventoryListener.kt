@@ -16,16 +16,21 @@ class InventoryListener(private val scheduler: AsyncUtils): Listener {
         if (event.player !is Player) return
         val inventory = CustomInventory.getOpenInventory(event.player as Player) ?: return
 
-        scheduler.delay({
-            if (event.viewers.contains(event.player)) return@delay
-            inventory.close(event.player as Player)
-        }, 1)
+        if (SantioUtils.switching.contains(event.player.uniqueId)) {
+            SantioUtils.switching.remove(event.player.uniqueId)
+            return
+        }
+
+        inventory.close(event.player as Player)
     }
 
     @EventHandler
     private fun onInventoryClick(event: InventoryClickEvent) {
         if (event.whoClicked !is Player) return
-        SantioUtils.inventories.forEach { if (it.isOpen(event.whoClicked.uniqueId)) it.onClick(event) }
+        val inventory = CustomInventory.getOpenInventory(event.whoClicked as Player) ?: return
+
+        if (event.clickedInventory != inventory.getBukkitInventory()) return
+        inventory.onClick(event)
     }
 
     @EventHandler

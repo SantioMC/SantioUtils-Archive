@@ -5,11 +5,13 @@ import me.santio.utils.inventory.CustomInventory
 import me.santio.utils.inventory.InventoryListener
 import me.santio.utils.query.QueryListener
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.UUID
 
 class SantioUtils(plugin: JavaPlugin) {
 
     companion object {
         val inventories: MutableSet<CustomInventory> = mutableSetOf()
+        val switching: MutableSet<UUID> = mutableSetOf()
     }
 
     init {
