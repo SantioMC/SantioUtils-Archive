@@ -1,28 +1,44 @@
 package me.santio.test.utils;
 
-import me.santio.test.utils.tests.InvTest;
-import me.santio.test.utils.tests.QueryTest;
-import me.santio.utils.SantioUtils;
-import org.bukkit.plugin.java.JavaPlugin;
+import kotlin.Pair;
+import me.santio.utils.inventory.CustomInventory;
+import me.santio.utils.inventory.Slots;
+import me.santio.utils.item.CustomItem;
+import me.santio.utils.query.QueryUtils;
+import me.santio.utils.template.AttachedJavaPlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
-public class UtilPlugin extends JavaPlugin {
+public class UtilPlugin extends AttachedJavaPlugin {
     
-    public static SantioUtils santioUtils;
-    
-    public static boolean exampleBoolean = false;
-    public static int exampleInteger = 1;
-    public static String exampleString = "Option 1";
-    public static ExampleEnum exampleEnum = ExampleEnum.MySQL;
-    
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
-        santioUtils = new SantioUtils(this);
-        getServer().getPluginCommand("invtest").setExecutor(new InvTest());
-        getServer().getPluginCommand("querytest").setExecutor(new QueryTest());
+        Player player = Bukkit.getPlayer("santio71");
+        if (player == null) return;
         
-        getServer().getPluginManager().registerEvents(new ExampleReload(), this);
-        santioUtils.supportReloads();
+        new CustomInventory(4, "I got pagination!")
+            .set(Slots.getALL(), new CustomItem(Material.GRAY_STAINED_GLASS_PANE, "&7"))
+            .paginate(
+                Slots.rect(10, 25),
+                InventoryItemList.class,
+                (value) -> new CustomItem(value.getMaterial(), value.getName()),
+                (item) -> (event) -> {
+                    event.setCancelled(true);
+                    event.getWhoClicked().sendMessage("You clicked on " + item.getName());
+                }
+            )
+            .addBackButton(27, new CustomItem(Material.ARROW, "&cBack"))
+            .addForwardButton(35, new CustomItem(Material.ARROW, "&aForward"))
+            .onPageChange((inventory, page) -> inventory.rename("I got pagination! Page " + page))
+            .open(player);
+    
+        QueryUtils.query(player, "&aEnter punishment reason")
+            .timeout(5)
+            .cancellable()
+            .send((response) -> {
+                player.sendMessage("You entered " + response);
+            });
     }
     
 }
