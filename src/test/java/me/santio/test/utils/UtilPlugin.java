@@ -13,6 +13,8 @@ public class UtilPlugin extends AttachedJavaPlugin {
     
     @Override
     public void onEnable() {
+        super.onEnable();
+        
         Player player = Bukkit.getPlayer("santio71");
         if (player == null) return;
         

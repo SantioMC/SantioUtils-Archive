@@ -6,7 +6,7 @@ import me.santio.utils.bukkit.AsyncUtils
 import org.bukkit.plugin.java.JavaPlugin
 
 abstract class AttachedJavaPlugin : JavaPlugin() {
-    override fun onLoad() {
+    override fun onEnable() {
         utils = SantioUtils(this)
         scheduler = AsyncUtils(this)
     }
