@@ -144,7 +144,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         paginatedInventory.useSlots(slots)
         paginatedInventory.addItems(*clazz.enumConstants.map { handler.apply(it) }.toTypedArray())
         clazz.enumConstants.map { event.apply(it) }.forEachIndexed { index, consumer ->
-            paginatedInventory.onClick[slots.get(index)] = consumer
+            slots.get(index)?.let { paginatedInventory.onClick[it] = consumer }
         }
         return paginatedInventory
     }

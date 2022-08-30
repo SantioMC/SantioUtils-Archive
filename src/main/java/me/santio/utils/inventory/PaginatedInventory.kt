@@ -32,7 +32,8 @@ class PaginatedInventory(
 
         // Paginate items
         val paginatedItems = items.subList((page - 1) * slots.size(), (page * slots.size()).coerceAtMost(items.size))
-        paginatedItems.forEachIndexed { index, item -> inventory.setItem(slots.get(index), item) }
+        paginatedItems.forEachIndexed { index, item -> slots.get(index - 1)?.let { set(it, item) }}
+        onClick = events[page] ?: mutableMapOf()
 
         // Add back and forward buttons
         if (page > 1) back?.let { set(it.first, it.second) { e ->

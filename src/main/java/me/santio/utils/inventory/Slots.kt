@@ -77,7 +77,7 @@ class Slots(private val slots: MutableSet<Int>) {
     fun size() = slots.size
     fun iterator(): Iterator<Int> = slots.iterator()
 
-    fun get(index: Int): Int = slots.elementAt(index)
+    fun get(index: Int): Int? = slots.elementAtOrNull(index)
 
     fun apply(inventory: CustomInventory): Set<Int> {
         return slots.filter { it < inventory.size() }.toSet()
