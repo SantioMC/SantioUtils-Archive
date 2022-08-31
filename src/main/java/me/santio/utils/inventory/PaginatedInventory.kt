@@ -34,7 +34,7 @@ class PaginatedInventory(
     fun open(player: Player, page: Int = 1): PaginatedInventory {
         if (isOpen(player)) switchConsumers.forEach { it.accept(this, page) }
 
-        if (player.openInventory.topInventory != player.openInventory.bottomInventory) SantioUtils.switching.add(player.uniqueId)
+        if (getOpenInventory(player) != null) SantioUtils.switching.add(player.uniqueId)
         player.openInventory(this.inventory)
         this.opened.add(player.uniqueId)
 

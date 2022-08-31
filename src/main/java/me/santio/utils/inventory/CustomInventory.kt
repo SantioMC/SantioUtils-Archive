@@ -152,7 +152,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     fun open(vararg players: Player): CustomInventory {
         players.forEach {
-            if (it.openInventory.topInventory != it.openInventory.bottomInventory) SantioUtils.switching.add(it.uniqueId)
+            if (getOpenInventory(it) != null) SantioUtils.switching.add(it.uniqueId)
             it.openInventory(inventory)
             opened.add(it.uniqueId)
         }
