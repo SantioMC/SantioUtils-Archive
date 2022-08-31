@@ -152,12 +152,22 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     fun open(vararg players: Player): CustomInventory {
         players.forEach {
-            if (getOpenInventory(it) != null) SantioUtils.switching.add(it.uniqueId)
+            val current = getOpenInventory(it)
+            if (current != null) {
+                current.unbind(it)
+                SantioUtils.switching.add(it.uniqueId)
+            }
+
             it.openInventory(inventory)
             opened.add(it.uniqueId)
         }
         SantioUtils.inventories.add(this)
         return this
+    }
+
+    fun unbind(player: Player) {
+        opened.remove(player.uniqueId)
+        if (deleteOnClose) SantioUtils.inventories.remove(this)
     }
 
     fun close(vararg players: Player) {
