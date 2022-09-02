@@ -1,5 +1,6 @@
 package me.santio.test.utils;
 
+import me.santio.utils.bukkit.Book;
 import me.santio.utils.commands.CommandBuilder;
 import me.santio.utils.commands.CommandHandler;
 import me.santio.utils.inventory.CustomInventory;
@@ -46,6 +47,11 @@ public class UtilPlugin extends AttachedJavaPlugin {
         CommandHandler.simple("test", (data) -> {
             data.getSender().sendMessage("You executed the command!");
         });
+        
+        CustomItem.book()
+            .page(1, "&aHello world!")
+            .page(2, "&aHello world!", "&bHow are you?")
+            .open(player);
         
         new CommandBuilder("test")
             .description("Test command")

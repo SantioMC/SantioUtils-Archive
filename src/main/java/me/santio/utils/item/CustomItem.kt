@@ -1,5 +1,6 @@
 package me.santio.utils.item
 
+import me.santio.utils.bukkit.Book
 import me.santio.utils.text.colored
 import me.santio.utils.text.normalcase
 import org.bukkit.Color
@@ -35,6 +36,9 @@ class CustomItem @JvmOverloads constructor(
             i.itemMeta = item.itemMeta
             return i
         }
+
+        @JvmStatic
+        fun book(): Book = Book()
     }
 
     init {
