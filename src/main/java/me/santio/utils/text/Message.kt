@@ -27,7 +27,7 @@ class Message(text: String) {
     }
 
     fun hover(text: String): Message {
-        component.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text(text.colored()))
+        component.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text(TextComponent.fromLegacyText(text.colored())))
         return this
     }
 
