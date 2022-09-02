@@ -1,6 +1,7 @@
 package me.santio.utils.bukkit
 
 import me.santio.utils.item.CustomItem
+import me.santio.utils.text.Message
 import me.santio.utils.text.colored
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -12,7 +13,7 @@ class Book {
     private val book = CustomItem(Material.WRITTEN_BOOK)
     private var title: String = "Blank"
     private var author: String = "Blank"
-    private var pages: MutableList<String> = mutableListOf()
+    private var pages: MutableList<Message> = mutableListOf()
 
     init {
         update()
@@ -31,19 +32,25 @@ class Book {
     }
 
     fun page(page: Int, value: String): Book {
-        pages[page] = value.colored()
+        pages[page] = Message(value.colored())
         update()
         return this
     }
 
-    fun page(page: Int, vararg value: String): Book {
-        pages[page] = value.joinToString("\n").colored()
+    fun page(page: Int, value: Message): Book {
+        pages[page] = value
         update()
         return this
     }
 
     fun pages(vararg pages: String): Book {
-        this.pages = pages.map { it.colored() }.toMutableList()
+        this.pages = pages.map { Message(it.colored()) }.toMutableList()
+        update()
+        return this
+    }
+
+    fun pages(vararg pages: Message): Book {
+        this.pages = pages.toMutableList()
         update()
         return this
     }
@@ -52,7 +59,7 @@ class Book {
         val meta = book.itemMeta as BookMeta
         meta.title = title
         meta.author = author
-        meta.pages = pages
+        meta.spigot().setPages(pages.map { it.component() }.toTypedArray())
         book.itemMeta = meta
     }
 
