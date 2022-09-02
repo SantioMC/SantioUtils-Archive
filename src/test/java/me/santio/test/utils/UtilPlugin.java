@@ -8,6 +8,7 @@ import me.santio.utils.inventory.Slots;
 import me.santio.utils.item.CustomItem;
 import me.santio.utils.query.QueryUtils;
 import me.santio.utils.template.AttachedJavaPlugin;
+import me.santio.utils.text.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -61,6 +62,11 @@ public class UtilPlugin extends AttachedJavaPlugin {
                 data.getSender().sendMessage("You executed the command!");
             })
             .create();
+        
+        new Message("&cYou are a nerd, click ")
+            .add(new Message("here").url("https://www.youtube.com/watch?v=dQw4w9WgXcQ").hover("&aClick me ;)"))
+            .add(new Message("!"))
+            .send(player);
     }
     
 }

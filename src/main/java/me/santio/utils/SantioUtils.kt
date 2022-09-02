@@ -1,11 +1,10 @@
 package me.santio.utils
 
-import me.santio.utils.bukkit.AsyncUtils
 import me.santio.utils.inventory.CustomInventory
 import me.santio.utils.inventory.InventoryListener
 import me.santio.utils.query.QueryListener
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.UUID
+import java.util.*
 
 class SantioUtils(plugin: JavaPlugin) {
 

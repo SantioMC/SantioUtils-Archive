@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.chat.hover.content.Text
+import org.bukkit.entity.Player
 import java.util.*
 import java.util.regex.Matcher
 
@@ -51,4 +52,8 @@ fun BaseComponent.add(component: BaseComponent): BaseComponent {
 @Suppress("SpellCheckingInspection")
 fun String.normalcase(): String {
     return this.split(" ", "-", "_").joinToString(" ") { s -> s.substring(0, 1).uppercase() + s.substring(1).lowercase() }
+}
+
+fun Player.sendMessage(message: Message) {
+    this.spigot().sendMessage(message.component())
 }
