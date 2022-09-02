@@ -51,7 +51,7 @@ public class UtilPlugin extends AttachedJavaPlugin {
         
         CustomItem.book()
             .page(1, "&aHello world!")
-            .page(2, "&aHello world!", "&bHow are you?")
+            .page(2, new Message("&aHover over me!").hover("Hey ;)"))
             .open(player);
         
         new CommandBuilder("test")
