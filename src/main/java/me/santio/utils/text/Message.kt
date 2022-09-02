@@ -9,6 +9,11 @@ import org.bukkit.entity.Player
 
 class Message(text: String) {
 
+    companion object {
+        @JvmStatic
+        val EMPTY = Message("")
+    }
+
     private val component = text.colored().toComponent()
 
     fun url(uri: String): Message {
