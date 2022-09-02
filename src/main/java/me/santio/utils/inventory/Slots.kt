@@ -39,8 +39,8 @@ class Slots(private val slots: MutableSet<Int>) {
             val oneCoord = getCords(minOf(corner1, corner2))
             val twoCoord = getCords(maxOf(corner1, corner2))
 
-            for (x in oneCoord.first..twoCoord.first) {
-                for (y in oneCoord.second..twoCoord.second) {
+            for (y in oneCoord.second..twoCoord.second) {
+                for (x in oneCoord.first..twoCoord.first) {
                     slots.add(x + (y * 9))
                 }
             }
