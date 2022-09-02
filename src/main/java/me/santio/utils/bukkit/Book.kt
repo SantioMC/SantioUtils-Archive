@@ -6,7 +6,6 @@ import me.santio.utils.text.colored
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.BookMeta
-import java.util.Collections.max
 
 @Suppress("unused")
 class Book {
@@ -14,7 +13,7 @@ class Book {
     private val book = CustomItem(Material.WRITTEN_BOOK)
     private var title: String = "Blank"
     private var author: String = "Blank"
-    private var pages: MutableMap<Int, Message> = mutableMapOf()
+    private var pages: MutableList<Message> = mutableListOf()
 
     init {
         update()
@@ -32,44 +31,35 @@ class Book {
         return this
     }
 
-    fun page(page: Int, value: String): Book {
-        pages[page] = Message(value.colored())
+    fun page(value: String): Book {
+        pages.add(Message(value))
         update()
         return this
     }
 
-    fun page(page: Int, value: Message): Book {
-        pages[page] = value
+    fun page(value: Message): Book {
+        pages.add(value)
         update()
         return this
     }
 
     fun pages(vararg pages: String): Book {
-        this.pages = pages.map { Message(it.colored()) }.mapIndexed { index, message -> index to message }.toMap().toMutableMap()
+        this.pages = pages.map { Message(it) }.toMutableList()
         update()
         return this
     }
 
     fun pages(vararg pages: Message): Book {
-        this.pages = pages.mapIndexed { index, message -> index to message }.toMap().toMutableMap()
+        this.pages = pages.toMutableList()
         update()
         return this
-    }
-
-    private fun<T> toList(map: Map<Int, T>): List<T?> {
-        val m = mutableMapOf<Int, T?>()
-        for (i in 0..max(map.keys)) {
-            if (map[i] == null) m[i] = null
-            else m[i] = map[i]
-        }
-        return m.values.toList()
     }
 
     private fun update() {
         val meta = book.itemMeta as BookMeta
         meta.title = title
         meta.author = author
-        meta.spigot().setPages(toList(pages).map { it?.component() ?: Message.EMPTY.component() }.toTypedArray())
+        meta.spigot().setPages(pages.map { it.component() }.toTypedArray())
         book.itemMeta = meta
     }
 
