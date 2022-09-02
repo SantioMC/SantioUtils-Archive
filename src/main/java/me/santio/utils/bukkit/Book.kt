@@ -58,8 +58,9 @@ class Book {
 
     private fun<T> toList(map: Map<Int, T>): List<T?> {
         val m = mutableMapOf<Int, T?>()
-        for (i in 0 .. max(m.keys)) {
-            if (m[i] == null) m[i] = null
+        for (i in 0..max(map.keys)) {
+            if (map[i] == null) m[i] = null
+            else m[i] = map[i]
         }
         return m.values.toList()
     }
