@@ -1,5 +1,7 @@
 package me.santio.test.utils;
 
+import me.santio.utils.commands.CommandBuilder;
+import me.santio.utils.commands.CommandHandler;
 import me.santio.utils.inventory.CustomInventory;
 import me.santio.utils.inventory.Slots;
 import me.santio.utils.item.CustomItem;
@@ -40,6 +42,19 @@ public class UtilPlugin extends AttachedJavaPlugin {
             .send((response) -> {
                 player.sendMessage("You entered " + response);
             });
+    
+        CommandHandler.simple("test", (data) -> {
+            data.getSender().sendMessage("You executed the command!");
+        });
+        
+        new CommandBuilder("test")
+            .description("Test command")
+            .aliases("t")
+            .permission("test.command")
+            .onExecute((data) -> {
+                data.getSender().sendMessage("You executed the command!");
+            })
+            .create();
     }
     
 }
