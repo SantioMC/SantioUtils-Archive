@@ -45,8 +45,8 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun items(): List<ItemStack> = inventory.contents.toList()
     fun getBukkitInventory() = inventory
 
-    fun isOpen(player: Player): Boolean = isOpen(player.uniqueId)
-    fun isOpen(uuid: UUID): Boolean = opened.contains(uuid)
+    fun isOpen(player: Player): Boolean = player.hasMetadata("inventory")
+            && player.getMetadata("inventory")[0].asString() == id
 
     fun deleteOnClose(deleteOnClose: Boolean): CustomInventory {
         this.deleteOnClose = deleteOnClose
