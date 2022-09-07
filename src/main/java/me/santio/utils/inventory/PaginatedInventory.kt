@@ -33,13 +33,10 @@ class PaginatedInventory(
     private var back: Pair<Slots, ItemStack>? = null
     private var forward: Pair<Slots, ItemStack>? = null
 
-    override fun isOpen(player: Player): Boolean = player.hasMetadata("inventory")
-            && player.getMetadata("inventory")[0].asString() == id
-
     @JvmOverloads
     fun open(plugin: JavaPlugin, player: Player, page: Int = 1): PaginatedInventory {
         SantioUtils.inventories.add(this)
-        player.setMetadata("inventory", FixedMetadataValue(plugin, this))
+        player.setMetadata("inventory", FixedMetadataValue(plugin, id))
         player.openInventory(this.inventory)
 
         // Paginate items
