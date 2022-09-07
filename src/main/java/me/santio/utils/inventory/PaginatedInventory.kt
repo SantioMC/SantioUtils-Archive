@@ -7,6 +7,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.CraftingInventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
+import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 import kotlin.math.ceil
@@ -31,17 +33,11 @@ class PaginatedInventory(
     private var forward: Pair<Slots, ItemStack>? = null
 
     @JvmOverloads
-    fun open(player: Player, page: Int = 1): PaginatedInventory {
+    fun open(plugin: JavaPlugin, player: Player, page: Int = 1): PaginatedInventory {
         if (isOpen(player)) switchConsumers.forEach { it.accept(this, page) }
 
-        val current = getOpenInventory(player)
-        if (current != null) {
-            current.unbind(player)
-            SantioUtils.switching.add(player.uniqueId)
-        }
-
         player.openInventory(this.inventory)
-        this.opened.add(player.uniqueId)
+        player.setMetadata("inventory", FixedMetadataValue(plugin, this))
 
         // Paginate items
         val paginatedItems = items.subList((page - 1) * slots.size(), (page * slots.size()).coerceAtMost(items.size))
@@ -51,12 +47,12 @@ class PaginatedInventory(
         // Add back and forward buttons
         if (page > 1) back?.let { set(it.first, it.second) { e ->
             e.isCancelled = true
-            open(e.whoClicked as Player, page - 1)
+            open(plugin, e.whoClicked as Player, page - 1)
         }} else back?.let { set(it.first, CustomItem.fromItem(it.second).name("&cFirst Page")) }
 
         if (page < pages()) forward?.let { set(it.first, it.second) { e ->
             e.isCancelled = true
-            open(e.whoClicked as Player, page + 1)
+            open(plugin, e.whoClicked as Player, page + 1)
         }} else forward?.let { set(it.first, CustomItem.fromItem(it.second).name("&cLast Page")) }
 
         return this

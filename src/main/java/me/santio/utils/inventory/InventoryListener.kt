@@ -15,13 +15,7 @@ object InventoryListener: Listener {
     private fun onInventoryClose(event: InventoryCloseEvent) {
         if (event.player !is Player) return
         val inventory = CustomInventory.getOpenInventory(event.player as Player) ?: return
-
-        if (SantioUtils.switching.contains(event.player.uniqueId)) {
-            SantioUtils.switching.remove(event.player.uniqueId)
-            return
-        }
-
-        inventory.close(event.player as Player)
+        inventory.unbind(event.player as Player)
     }
 
     @EventHandler

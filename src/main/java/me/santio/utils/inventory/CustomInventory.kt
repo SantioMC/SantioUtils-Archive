@@ -10,6 +10,8 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
+import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.plugin.java.JavaPlugin
 import java.awt.Color
 import java.util.*
 import java.util.function.Consumer
@@ -36,6 +38,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     protected val opened: MutableSet<UUID> = mutableSetOf()
     protected var inventory: Inventory = Bukkit.createInventory(null, size(), name.colored())
     protected var onClick: MutableMap<Int, Consumer<InventoryClickEvent>> = mutableMapOf()
+    protected val id: String = UUID.randomUUID().toString()
 
     fun rows(): Int = if (size % 9 == 0) size / 9 else size
     fun size(): Int = rows() * 9
@@ -56,14 +59,14 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         onClick[event.slot]?.accept(event) ?: run { event.isCancelled = true }
     }
 
-    fun rename(name: String): CustomInventory {
+    fun rename(plugin: JavaPlugin, name: String): CustomInventory {
         this.name = name
 
         val export = export()
         inventory = Bukkit.createInventory(null, size(), name.colored())
 
         import(export)
-        open(*opened.mapNotNull { Bukkit.getPlayer(it) }.toTypedArray())
+        open(plugin, *opened.mapNotNull { Bukkit.getPlayer(it) }.toTypedArray())
 
         return this
     }
@@ -150,17 +153,12 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         return this
     }
 
-    fun open(vararg players: Player): CustomInventory {
+    fun open(plugin: JavaPlugin, vararg players: Player): CustomInventory {
         players.forEach {
-            val current = getOpenInventory(it)
-            if (current != null) {
-                current.unbind(it)
-                SantioUtils.switching.add(it.uniqueId)
-            }
-
             it.openInventory(inventory)
-            opened.add(it.uniqueId)
+            it.setMetadata("inventory", FixedMetadataValue(plugin, id))
         }
+
         SantioUtils.inventories.add(this)
         return this
     }
