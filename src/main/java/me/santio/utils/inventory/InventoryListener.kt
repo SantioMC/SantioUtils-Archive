@@ -29,7 +29,7 @@ object InventoryListener: Listener {
 
     @EventHandler
     private fun onQuit(event: PlayerQuitEvent) {
-        SantioUtils.inventories.forEach { if (it.isOpen(event.player.uniqueId)) it.close(event.player) }
+        SantioUtils.inventories.forEach { if (it.isOpen(event.player)) it.close(event.player) }
     }
 
 }
