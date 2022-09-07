@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import org.bukkit.metadata.FixedMetadataValue
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 import kotlin.math.ceil
@@ -32,11 +33,14 @@ class PaginatedInventory(
     private var back: Pair<Slots, ItemStack>? = null
     private var forward: Pair<Slots, ItemStack>? = null
 
+    override fun isOpen(player: Player): Boolean = player.hasMetadata("inventory")
+            && player.getMetadata("inventory")[0].asString() == id
+
     @JvmOverloads
     fun open(plugin: JavaPlugin, player: Player, page: Int = 1): PaginatedInventory {
-        player.openInventory(this.inventory)
-        player.setMetadata("inventory", FixedMetadataValue(plugin, this))
         SantioUtils.inventories.add(this)
+        player.setMetadata("inventory", FixedMetadataValue(plugin, this))
+        player.openInventory(this.inventory)
 
         // Paginate items
         val paginatedItems = items.subList((page - 1) * slots.size(), (page * slots.size()).coerceAtMost(items.size))
