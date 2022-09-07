@@ -35,8 +35,8 @@ public class UtilPlugin extends AttachedJavaPlugin {
             )
             .addBackButton(27, new CustomItem(Material.ARROW, "&cBack"))
             .addForwardButton(35, new CustomItem(Material.ARROW, "&aForward"))
-            .onPageChange((inventory, page) -> inventory.rename("I got pagination! Page " + page))
-            .open(player);
+            .onPageChange((inventory, page) -> inventory.rename(this, "I got pagination! Page " + page))
+            .open(this, player);
     
         QueryUtils.query(player, "&aEnter punishment reason")
             .timeout(5)
