@@ -16,6 +16,8 @@ object InventoryListener: Listener {
         if (event.player !is Player) return
         val inventory = CustomInventory.getOpenInventory(event.player as Player) ?: return
         inventory.unbind(event.player as Player)
+
+        if (inventory.deleteOnClose() && inventory.isEmpty()) inventory.delete()
     }
 
     @EventHandler

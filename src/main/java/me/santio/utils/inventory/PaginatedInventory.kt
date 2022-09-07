@@ -34,10 +34,9 @@ class PaginatedInventory(
 
     @JvmOverloads
     fun open(plugin: JavaPlugin, player: Player, page: Int = 1): PaginatedInventory {
-        if (isOpen(player)) switchConsumers.forEach { it.accept(this, page) }
-
         player.openInventory(this.inventory)
         player.setMetadata("inventory", FixedMetadataValue(plugin, this))
+        SantioUtils.inventories.add(this)
 
         // Paginate items
         val paginatedItems = items.subList((page - 1) * slots.size(), (page * slots.size()).coerceAtMost(items.size))

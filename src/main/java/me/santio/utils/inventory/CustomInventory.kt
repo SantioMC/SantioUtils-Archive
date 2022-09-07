@@ -43,6 +43,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun rows(): Int = if (size % 9 == 0) size / 9 else size
     fun size(): Int = rows() * 9
     fun items(): List<ItemStack> = inventory.contents.toList()
+    fun isEmpty(): Boolean = inventory.isEmpty
     fun getBukkitInventory() = inventory
 
     fun isOpen(player: Player): Boolean = player.hasMetadata("inventory")
