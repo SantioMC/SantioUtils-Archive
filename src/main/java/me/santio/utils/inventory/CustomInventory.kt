@@ -48,7 +48,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun size(): Int = rows() * 9
     fun items(): List<ItemStack> = inventory.contents.toList()
     fun opened(): List<Player> = inventory.viewers.map { it as Player }
-    fun isEmpty(): Boolean = opened().isEmpty()
+    fun isEmpty(ignore: Player? = null): Boolean = opened().none { it != ignore }
 
     fun isOpen(player: Player): Boolean = opened().contains(player)
 
