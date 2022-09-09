@@ -35,7 +35,6 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     }
 
     private var deleteOnClose: Boolean = true
-    protected val opened: MutableSet<UUID> = mutableSetOf()
     protected var inventory: Inventory = Bukkit.createInventory(null, size(), name.colored())
     protected var onClick: MutableMap<Int, Consumer<InventoryClickEvent>> = mutableMapOf()
     protected val id: String = UUID.randomUUID().toString()
@@ -45,6 +44,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun items(): List<ItemStack> = inventory.contents.toList()
     fun isEmpty(): Boolean = inventory.isEmpty
     fun getBukkitInventory() = inventory
+    fun opened(): List<Player> = inventory.viewers.map { it as Player }
 
     fun isOpen(player: Player): Boolean = player.hasMetadata("inventory")
             && player.getMetadata("inventory")[0].asString() == id
@@ -60,14 +60,14 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         onClick[event.slot]?.accept(event) ?: run { event.isCancelled = true }
     }
 
-    fun rename(plugin: JavaPlugin, name: String): CustomInventory {
+    open fun rename(name: String): CustomInventory {
         this.name = name
 
         val export = export()
         inventory = Bukkit.createInventory(null, size(), name.colored())
 
         import(export)
-        open(plugin, *opened.mapNotNull { Bukkit.getPlayer(it) }.toTypedArray())
+        open(*opened().toTypedArray())
 
         return this
     }
@@ -154,10 +154,10 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         return this
     }
 
-    fun open(plugin: JavaPlugin, vararg players: Player): CustomInventory {
+    fun open(vararg players: Player): CustomInventory {
         players.forEach {
             it.openInventory(inventory)
-            it.setMetadata("inventory", FixedMetadataValue(plugin, id))
+            it.setMetadata("inventory", FixedMetadataValue(SantioUtils.plugin!!, id))
         }
 
         SantioUtils.inventories.add(this)
@@ -165,14 +165,14 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     }
 
     fun unbind(player: Player) {
-        opened.remove(player.uniqueId)
+        player.removeMetadata("inventory", SantioUtils.plugin!!)
         if (deleteOnClose) SantioUtils.inventories.remove(this)
     }
 
     fun close(vararg players: Player) {
         players.forEach {
+            it.removeMetadata("inventory", SantioUtils.plugin!!)
             if (it.openInventory == inventory) it.closeInventory()
-            opened.remove(it.uniqueId)
         }
         if (deleteOnClose) delete()
     }

@@ -15,7 +15,7 @@ object InventoryListener: Listener {
     private fun onInventoryClose(event: InventoryCloseEvent) {
         if (event.player !is Player) return
         val inventory = CustomInventory.getOpenInventory(event.player as Player) ?: return
-        inventory.unbind(event.player as Player)
+        event.player.removeMetadata("inventory", SantioUtils.plugin!!)
 
         if (inventory.deleteOnClose() && inventory.isEmpty()) inventory.delete()
     }

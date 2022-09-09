@@ -34,9 +34,9 @@ class PaginatedInventory(
     private var forward: Pair<Slots, ItemStack>? = null
 
     @JvmOverloads
-    fun open(plugin: JavaPlugin, player: Player, page: Int = 1): PaginatedInventory {
+    fun open(player: Player, page: Int = 1): PaginatedInventory {
         SantioUtils.inventories.add(this)
-        player.setMetadata("inventory", FixedMetadataValue(plugin, id))
+        player.setMetadata("inventory", FixedMetadataValue(SantioUtils.plugin!!, id))
         player.openInventory(this.inventory)
 
         // Paginate items
@@ -47,12 +47,12 @@ class PaginatedInventory(
         // Add back and forward buttons
         if (page > 1) back?.let { set(it.first, it.second) { e ->
             e.isCancelled = true
-            open(plugin, e.whoClicked as Player, page - 1)
+            open(e.whoClicked as Player, page - 1)
         }} else back?.let { set(it.first, CustomItem.fromItem(it.second).name("&cFirst Page")) }
 
         if (page < pages()) forward?.let { set(it.first, it.second) { e ->
             e.isCancelled = true
-            open(plugin, e.whoClicked as Player, page + 1)
+            open(e.whoClicked as Player, page + 1)
         }} else forward?.let { set(it.first, CustomItem.fromItem(it.second).name("&cLast Page")) }
 
         return this

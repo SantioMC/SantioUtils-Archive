@@ -9,6 +9,7 @@ abstract class AttachedJavaPlugin : JavaPlugin() {
     override fun onEnable() {
         utils = SantioUtils(this)
         scheduler = AsyncUtils(this)
+        SantioUtils.register(this)
     }
 
     companion object {
