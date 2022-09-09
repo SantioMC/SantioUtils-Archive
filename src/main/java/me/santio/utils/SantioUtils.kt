@@ -10,7 +10,6 @@ class SantioUtils(plugin: Plugin) {
 
     companion object {
         val inventories: MutableSet<CustomInventory> = mutableSetOf()
-        val switching: MutableSet<UUID> = mutableSetOf()
         var plugin: Plugin? = null
 
         fun register(plugin: Plugin) {

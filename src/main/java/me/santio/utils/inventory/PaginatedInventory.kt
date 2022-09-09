@@ -4,12 +4,7 @@ import me.santio.utils.SantioUtils
 import me.santio.utils.item.CustomItem
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.CraftingInventory
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.PlayerInventory
-import org.bukkit.metadata.FixedMetadataValue
-import org.bukkit.plugin.java.JavaPlugin
-import java.util.*
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 import kotlin.math.ceil
@@ -36,7 +31,6 @@ class PaginatedInventory(
     @JvmOverloads
     fun open(player: Player, page: Int = 1): PaginatedInventory {
         SantioUtils.inventories.add(this)
-        player.setMetadata("inventory", FixedMetadataValue(SantioUtils.plugin!!, id))
         player.openInventory(this.inventory)
 
         // Paginate items

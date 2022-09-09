@@ -32,12 +32,22 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
             }
             return null
         }
+
+        @JvmStatic
+        fun get(inventory: Inventory): CustomInventory? {
+            for (customInventory in SantioUtils.inventories) {
+                if (customInventory.inventory == inventory) {
+                    return customInventory
+                }
+            }
+            return null
+        }
     }
 
     private var deleteOnClose: Boolean = true
     protected var inventory: Inventory = Bukkit.createInventory(null, size(), name.colored())
     protected var onClick: MutableMap<Int, Consumer<InventoryClickEvent>> = mutableMapOf()
-    protected val id: String = UUID.randomUUID().toString()
+    val id: String = UUID.randomUUID().toString()
 
     fun rows(): Int = if (size % 9 == 0) size / 9 else size
     fun size(): Int = rows() * 9
@@ -157,7 +167,6 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun open(vararg players: Player): CustomInventory {
         players.forEach {
             it.openInventory(inventory)
-            it.setMetadata("inventory", FixedMetadataValue(SantioUtils.plugin!!, id))
         }
 
         SantioUtils.inventories.add(this)
@@ -171,8 +180,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     fun close(vararg players: Player) {
         players.forEach {
-            it.removeMetadata("inventory", SantioUtils.plugin!!)
-            if (it.openInventory == inventory) it.closeInventory()
+            it.closeInventory()
         }
         if (deleteOnClose) delete()
     }

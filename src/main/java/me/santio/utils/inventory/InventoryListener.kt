@@ -7,7 +7,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.metadata.FixedMetadataValue
 
 object InventoryListener: Listener {
 
@@ -21,9 +23,21 @@ object InventoryListener: Listener {
     }
 
     @EventHandler
+    private fun onInventoryOpen(event: InventoryOpenEvent) {
+        if (event.player !is Player) return
+        val inventory = CustomInventory.get(event.inventory) ?: return
+
+        event.player.setMetadata("inventory", FixedMetadataValue(SantioUtils.plugin!!, inventory.id))
+    }
+
+    @EventHandler
     private fun onInventoryClick(event: InventoryClickEvent) {
         if (event.whoClicked !is Player) return
-        val inventory = CustomInventory.getOpenInventory(event.whoClicked as Player) ?: return
+        val inventory = CustomInventory.get(event.inventory) ?: return
+
+        if (!inventory.isOpen(event.whoClicked as Player)) {
+            event.whoClicked.setMetadata("inventory", FixedMetadataValue(SantioUtils.plugin!!, inventory.id))
+        }
 
         if (event.clickedInventory != inventory.getBukkitInventory()) return
         inventory.onClick(event)
