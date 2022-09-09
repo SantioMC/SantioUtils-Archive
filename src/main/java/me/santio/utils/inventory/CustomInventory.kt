@@ -6,17 +6,11 @@ import me.santio.utils.text.colored
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.PlayerInventory
-import org.bukkit.metadata.FixedMetadataValue
-import org.bukkit.plugin.java.JavaPlugin
-import java.awt.Color
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
-import kotlin.math.exp
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 open class CustomInventory @JvmOverloads constructor(open val size: Int, var name: String = "Inventory") {
@@ -49,15 +43,14 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     protected var onClick: MutableMap<Int, Consumer<InventoryClickEvent>> = mutableMapOf()
     val id: String = UUID.randomUUID().toString()
 
+    fun getBukkitInventory() = inventory
     fun rows(): Int = if (size % 9 == 0) size / 9 else size
     fun size(): Int = rows() * 9
     fun items(): List<ItemStack> = inventory.contents.toList()
-    fun isEmpty(): Boolean = inventory.isEmpty
-    fun getBukkitInventory() = inventory
     fun opened(): List<Player> = inventory.viewers.map { it as Player }
+    fun isEmpty(): Boolean = opened().isEmpty()
 
-    fun isOpen(player: Player): Boolean = player.hasMetadata("inventory")
-            && player.getMetadata("inventory")[0].asString() == id
+    fun isOpen(player: Player): Boolean = opened().contains(player)
 
     fun deleteOnClose(deleteOnClose: Boolean): CustomInventory {
         this.deleteOnClose = deleteOnClose
@@ -173,19 +166,8 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         return this
     }
 
-    fun unbind(player: Player) {
-        player.removeMetadata("inventory", SantioUtils.plugin!!)
-        if (deleteOnClose) SantioUtils.inventories.remove(this)
-    }
-
-    fun close(vararg players: Player) {
-        players.forEach {
-            it.closeInventory()
-        }
-        if (deleteOnClose) delete()
-    }
-
     fun delete() {
+        opened().forEach { it.closeInventory() }
         SantioUtils.inventories.remove(this)
     }
 

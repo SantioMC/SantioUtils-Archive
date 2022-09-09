@@ -30,7 +30,6 @@ class PaginatedInventory(
 
     @JvmOverloads
     fun open(player: Player, page: Int = 1): PaginatedInventory {
-        SantioUtils.inventories.add(this)
         player.openInventory(this.inventory)
 
         // Paginate items
@@ -41,11 +40,13 @@ class PaginatedInventory(
         // Add back and forward buttons
         if (page > 1) back?.let { set(it.first, it.second) { e ->
             e.isCancelled = true
+            switch(page - 1)
             open(e.whoClicked as Player, page - 1)
         }} else back?.let { set(it.first, CustomItem.fromItem(it.second).name("&cFirst Page")) }
 
         if (page < pages()) forward?.let { set(it.first, it.second) { e ->
             e.isCancelled = true
+            switch(page + 1)
             open(e.whoClicked as Player, page + 1)
         }} else forward?.let { set(it.first, CustomItem.fromItem(it.second).name("&cLast Page")) }
 
@@ -90,6 +91,10 @@ class PaginatedInventory(
     fun onPageChange(page: BiConsumer<PaginatedInventory, Int>): PaginatedInventory {
         switchConsumers.add(page)
         return this
+    }
+
+    private fun switch(page: Int) {
+        switchConsumers.forEach { it.accept(this, page) }
     }
 
 }
