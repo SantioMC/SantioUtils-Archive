@@ -1,6 +1,10 @@
 package me.santio.utils.inventory
 
-class Slots(private val slots: MutableSet<Int>) {
+@Suppress("unused")
+class Slots(
+    private val slots: MutableSet<Int>,
+    private var sorted: Boolean = true
+) {
 
     companion object {
 
@@ -74,12 +78,24 @@ class Slots(private val slots: MutableSet<Int>) {
         return this
     }
 
+    fun sorted(): Slots {
+        this.sorted = true
+        return this
+    }
+
+    fun unsorted(): Slots {
+        this.sorted = false
+        return this
+    }
+
     fun size() = slots.size
     fun iterator(): Iterator<Int> = slots.iterator()
+    fun isSorted() = sorted
 
     fun get(index: Int): Int? = slots.elementAtOrNull(index)
 
     fun apply(inventory: CustomInventory): Set<Int> {
+        val slots = if (sorted) this.slots.sorted() else this.slots
         return slots.filter { it < inventory.size() }.toSet()
     }
 
