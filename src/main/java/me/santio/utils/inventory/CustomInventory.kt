@@ -167,8 +167,8 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     }
 
     fun delete() {
-        opened().forEach { it.closeInventory() }
         SantioUtils.inventories.remove(this)
+        opened().forEach { it.closeInventory() }
     }
 
     @JvmOverloads
