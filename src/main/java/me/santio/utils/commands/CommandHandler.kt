@@ -1,9 +1,7 @@
 package me.santio.utils.commands
 
 import org.bukkit.Bukkit
-import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
-import org.bukkit.command.CommandSender
 import org.bukkit.util.Consumer
 import java.lang.reflect.Field
 

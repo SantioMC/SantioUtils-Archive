@@ -22,6 +22,15 @@ fun String.colored(): String {
     return matcher.appendTail(buffer).toString()
 }
 
+// THIS IS FOR INTERNAL USE - USE PREPARED STATEMENTS INSTEAD
+internal fun isSQLUnsafe(keyword: String): Boolean {
+    return keyword.contains(" ")
+            || keyword.contains("%")
+            || keyword.contains("'")
+            || keyword.contains("\"")
+            || keyword.contains("\\")
+}
+
 fun String.strip(): String {
     return ChatColor.stripColor(this)
 }
