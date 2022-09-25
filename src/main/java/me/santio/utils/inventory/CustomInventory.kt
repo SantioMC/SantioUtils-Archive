@@ -40,7 +40,9 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
 
     private var deleteOnClose: Boolean = true
     protected var inventory: Inventory = Bukkit.createInventory(null, size(), name.colored())
-    protected var onClick: MutableMap<Int, Consumer<InventoryClickEvent>> = mutableMapOf()
+    protected var onClick: MutableMap<Int, Consumer<CustomInventoryClickEvent>> = mutableMapOf()
+    internal var previous: CustomInventory? = null
+    internal var next: CustomInventory? = null
     val id: String = UUID.randomUUID().toString()
 
     fun getBukkitInventory() = inventory
@@ -60,7 +62,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun deleteOnClose() = deleteOnClose
 
     fun onClick(event: InventoryClickEvent) {
-        onClick[event.slot]?.accept(event) ?: run { event.isCancelled = true }
+        onClick[event.slot]?.accept(CustomInventoryClickEvent(event, this)) ?: run { event.isCancelled = true }
     }
 
     open fun rename(name: String): CustomInventory {
@@ -79,7 +81,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun set(
         slot: Int,
         item: ItemStack,
-        onClick: Consumer<InventoryClickEvent> = Consumer { it.isCancelled = true }
+        onClick: Consumer<CustomInventoryClickEvent> = Consumer { it.isCancelled = true }
     ): CustomInventory {
         inventory.setItem(slot, item)
         this.onClick[slot] = onClick
@@ -90,7 +92,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun set(
         slot: Slots,
         item: ItemStack,
-        onClick: Consumer<InventoryClickEvent> = Consumer { it.isCancelled = true }
+        onClick: Consumer<CustomInventoryClickEvent> = Consumer { it.isCancelled = true }
     ): CustomInventory {
         slot.apply(this).forEach { set(it, item, onClick) }
         return this
@@ -99,7 +101,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     @JvmOverloads
     fun add(
         item: ItemStack,
-        onClick: Consumer<InventoryClickEvent> = Consumer { it.isCancelled = true }
+        onClick: Consumer<CustomInventoryClickEvent> = Consumer { it.isCancelled = true }
     ): CustomInventory {
         val slot = inventory.firstEmpty()
         if (slot == -1) return this
@@ -126,7 +128,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     @JvmOverloads
     fun border(
         item: ItemStack,
-        onClick: Consumer<InventoryClickEvent> = Consumer { it.isCancelled = true }
+        onClick: Consumer<CustomInventoryClickEvent> = Consumer { it.isCancelled = true }
     ): CustomInventory {
         val slots = Slots.column(1)
             .add(Slots.column(9))
@@ -167,6 +169,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     }
 
     fun delete() {
+        if (next != null) return
         SantioUtils.inventories.remove(this)
         opened().forEach { it.closeInventory() }
     }
@@ -176,7 +179,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         slots: Slots,
         clazz: Class<T>,
         handler: Function<T, CustomItem>,
-        event: Function<T, Consumer<InventoryClickEvent>> = Function { Consumer { it.isCancelled = true } }
+        event: Function<T, Consumer<CustomInventoryClickEvent>> = Function { Consumer { it.isCancelled = true } }
     ): PaginatedInventory {
         val paginatedInventory = PaginatedInventory(this)
         paginatedInventory.useSlots(slots)

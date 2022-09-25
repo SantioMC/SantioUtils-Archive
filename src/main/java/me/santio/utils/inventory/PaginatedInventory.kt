@@ -5,11 +5,12 @@ import me.santio.utils.item.CustomItem
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
+import java.util.UUID
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 import kotlin.math.ceil
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 class PaginatedInventory(
     inv: CustomInventory
 ): CustomInventory(inv.rows(), inv.name) {
@@ -22,7 +23,8 @@ class PaginatedInventory(
 
     private var slots: Slots = Slots.ALL
     private var items: MutableList<ItemStack> = mutableListOf()
-    private var events: MutableMap<Int, MutableMap<Int, Consumer<InventoryClickEvent>>> = mutableMapOf()
+    private var events: MutableMap<Int, MutableMap<Int, Consumer<CustomInventoryClickEvent>>> = mutableMapOf()
+    private var page: MutableMap<UUID, Int> = mutableMapOf()
     private var switchConsumers: MutableList<BiConsumer<PaginatedInventory, Int>> = mutableListOf()
 
     private var back: Pair<Slots, ItemStack>? = null
@@ -31,6 +33,7 @@ class PaginatedInventory(
     @JvmOverloads
     fun open(player: Player, page: Int = 1): PaginatedInventory {
         player.openInventory(this.inventory)
+        this.page[player.uniqueId] = page
 
         // Paginate items
         val paginatedItems = items.subList((page - 1) * slots.size(), (page * slots.size()).coerceAtMost(items.size))
@@ -54,6 +57,8 @@ class PaginatedInventory(
     }
 
     fun pages() = ceil(items.size / slots.size().toDouble()).toInt()
+    fun page(player: Player) = page[player.uniqueId] ?: 1
+    fun page(player: UUID) = page[player] ?: 1
 
     fun useSlots(slots: Slots): PaginatedInventory {
         this.slots = slots
@@ -65,7 +70,7 @@ class PaginatedInventory(
         return this
     }
 
-    fun setEvent(page: Int, slot: Int, event: Consumer<InventoryClickEvent>): PaginatedInventory {
+    fun setEvent(page: Int, slot: Int, event: Consumer<CustomInventoryClickEvent>): PaginatedInventory {
         events.getOrPut(page) { mutableMapOf() }[slot] = event
         return this
     }
