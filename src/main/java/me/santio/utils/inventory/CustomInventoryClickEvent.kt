@@ -4,6 +4,7 @@ package me.santio.utils.inventory
 
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemStack
 
 class CustomInventoryClickEvent(
     private val event: InventoryClickEvent,
@@ -32,7 +33,8 @@ class CustomInventoryClickEvent(
         prevInventory.next = inventory
         inventory.previous = prevInventory
 
-        inventory.open(event.whoClicked as Player)
+        if (inventory is PaginatedInventory) inventory.open(event.whoClicked as Player, 1)
+        else inventory.open(event.whoClicked as Player)
     }
 
     fun back() {
@@ -53,5 +55,31 @@ class CustomInventoryClickEvent(
         prevInventory.previous = null
         prevInventory.delete()
     }
+
+    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
+    override fun setCursor(stack: ItemStack?) {
+        this.event.cursor = stack
+    }
+
+    override fun getCursor(): ItemStack? = this.event.cursor
+
+    override fun setCurrentItem(stack: ItemStack?) {
+        this.event.currentItem = stack
+    }
+
+    override fun getCurrentItem(): ItemStack? = this.event.currentItem
+
+    override fun setCancelled(toCancel: Boolean) {
+        this.event.isCancelled = toCancel
+    }
+
+    override fun isCancelled(): Boolean = this.event.isCancelled
+
+    override fun setResult(newResult: Result) {
+        this.event.result = newResult
+    }
+
+    override fun getResult(): Result = this.event.result
 
 }

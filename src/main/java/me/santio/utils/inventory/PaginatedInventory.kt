@@ -3,9 +3,8 @@ package me.santio.utils.inventory
 import me.santio.utils.SantioUtils
 import me.santio.utils.item.CustomItem
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
-import java.util.UUID
+import java.util.*
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 import kotlin.math.ceil
