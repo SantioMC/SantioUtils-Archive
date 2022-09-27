@@ -15,6 +15,10 @@ class TableBuilder(
         return Database.adapter().adapter?.get(database, table, key, clazz)
     }
 
+    fun json(key: String): String? {
+        return Database.adapter().adapter?.getAsJson(database, table, key)
+    }
+
     fun delete(key: String) {
         Database.adapter().adapter?.delete(database, table, key)
     }

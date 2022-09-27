@@ -1,6 +1,7 @@
 package me.santio.utils.database
 
 import me.santio.utils.database.builder.DatabaseBuilder
+import me.santio.utils.database.builder.MemoryBuilder
 import me.santio.utils.database.builder.MongoBuilder
 import me.santio.utils.database.builder.SQLiteBuilder
 import java.io.File
@@ -30,5 +31,8 @@ object Database {
 
     @JvmStatic
     fun sqlite(): SQLiteBuilder? = builder as SQLiteBuilder?
+
+    @JvmStatic
+    fun memory(): MemoryBuilder = builder as MemoryBuilder? ?: MemoryBuilder()
 
 }

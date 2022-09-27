@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package me.santio.utils.database.adapter.impl
 
 import me.santio.utils.SantioUtils
@@ -13,7 +15,7 @@ object SQLiteAdapter: DatabaseAdapter {
 
     override fun connect(uri: String) {
         Class.forName("org.sqlite.JDBC")
-        this.client = DriverManager.getConnection("jdbc:sqlite:$uri")
+        this.client = DriverManager.getConnection(uri)
     }
 
     override fun close() {
@@ -24,12 +26,13 @@ object SQLiteAdapter: DatabaseAdapter {
     override fun <T> get(database: String, table: String, key: String, clazz: Class<T>): T? {
         if (isSQLUnsafe(database) || isSQLUnsafe(table) || isSQLUnsafe(key)) return null
         this.client?.schema = database
-        val statement = this.client?.prepareStatement("SELECT * FROM $table WHERE $key = ?") ?: return null
+        val statement = this.client?.prepareStatement("SELECT value FROM $table WHERE key = ?") ?: return null
+        statement.setString(1, key)
 
         val result = statement.executeQuery()
         if (!result.next()) return null
 
-        val value = result.getString(1)
+        val value = result.getString("value")
         return SantioUtils.GSON.fromJson(value, clazz)
     }
 
@@ -39,8 +42,8 @@ object SQLiteAdapter: DatabaseAdapter {
         createTable(table)
         val statement = this.client?.prepareStatement("INSERT INTO $table (key, value) VALUES (?, ?)") ?: return
 
-        statement.setString(0, key)
-        statement.setString(1, SantioUtils.GSON.toJson(value))
+        statement.setString(1, key)
+        statement.setString(2, SantioUtils.GSON.toJson(value))
 
         statement.executeUpdate()
     }
@@ -50,7 +53,7 @@ object SQLiteAdapter: DatabaseAdapter {
         this.client?.schema = database
         val statement = this.client?.prepareStatement("DELETE FROM $table WHERE key = ?") ?: return
 
-        statement.setString(0, key)
+        statement.setString(1, key)
         statement.executeUpdate()
     }
 
@@ -62,7 +65,7 @@ object SQLiteAdapter: DatabaseAdapter {
         val result = statement.executeQuery()
         if (!result.next()) return 0
 
-        return result.getInt(0)
+        return result.getInt(1)
     }
 
     private fun createTable(table: String) {
@@ -70,4 +73,15 @@ object SQLiteAdapter: DatabaseAdapter {
         statement?.executeUpdate()
     }
 
+    override fun getAsJson(database: String, table: String, key: String): String? {
+        if (isSQLUnsafe(database) || isSQLUnsafe(table) || isSQLUnsafe(key)) return null
+        this.client?.schema = database
+        val statement = this.client?.prepareStatement("SELECT value FROM $table WHERE key = ?") ?: return null
+        statement.setString(1, key)
+
+        val result = statement.executeQuery()
+        if (!result.next()) return null
+
+        return result.getString("value")
+    }
 }

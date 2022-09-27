@@ -1,10 +1,13 @@
 package me.santio.utils.database.adapter.impl
 
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClient
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.ReplaceOptions
 import me.santio.utils.database.Storable
 import me.santio.utils.database.adapter.DatabaseAdapter
+import org.bson.UuidRepresentation
 import org.litote.kmongo.KMongo
 import org.litote.kmongo.*
 
@@ -14,7 +17,13 @@ object MongoAdapter: DatabaseAdapter {
 
     override fun connect(uri: String) {
         System.setProperty("org.litote.mongo.test.mapping.service", "org.litote.kmongo.jackson.JacksonClassMappingTypeService")
-        this.client = KMongo.createClient(uri)
+        this.client = KMongo.createClient(
+            MongoClientSettings
+                .builder()
+                .uuidRepresentation(UuidRepresentation.STANDARD)
+                .applyConnectionString(ConnectionString(uri))
+                .build()
+        )
     }
 
     override fun close() {
@@ -54,6 +63,15 @@ object MongoAdapter: DatabaseAdapter {
             ?.getDatabase(database)
             ?.getCollection(table)
             ?.countDocuments()?.toInt() ?: 0
+    }
+
+    override fun getAsJson(database: String, table: String, key: String): String? {
+        return this.client
+            ?.getDatabase(database)
+            ?.getCollection(table)
+            ?.find(Filters.eq("key", key))
+            ?.first()
+            ?.toJson()
     }
 
 }

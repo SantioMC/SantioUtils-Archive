@@ -2,19 +2,16 @@ package me.santio.utils.database.builder
 
 import me.santio.utils.database.Database
 import me.santio.utils.database.DatabaseType
-import me.santio.utils.database.adapter.impl.MongoAdapter
 import me.santio.utils.database.adapter.impl.SQLiteAdapter
-import java.io.File
 
-class SQLiteBuilder(file: File): DatabaseBuilder() {
+class MemoryBuilder : DatabaseBuilder() {
 
     init {
         Database.switch(DatabaseType.SQLite, this)
-        file.mkdirs()
-        SQLiteAdapter.connect("jdbc:sqlite:${file.absolutePath}")
+        SQLiteAdapter.connect("jdbc:sqlite::memory:")
     }
 
-    fun database(schema: String): SQLiteBuilder {
+    fun database(schema: String): MemoryBuilder {
         this.database = schema
         return this
     }
