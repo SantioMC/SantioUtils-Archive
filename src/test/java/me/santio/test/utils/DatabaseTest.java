@@ -16,13 +16,10 @@ public class DatabaseTest {
     @Test
     public void uuidInJson() {
         UUIDHolder uuid = new UUIDHolder(DatabaseTest.uuid, Collections.emptyList());
-        String json = SantioUtils.Companion.getGSON().toJson(uuid);
-        System.out.println(json);
         
-        assert Objects.equals(json, "{\"uuid\":\"" + uuid.getUuid().toString() + "\"}");
+        String json = SantioUtils.Companion.getGSON().toJson(uuid);
         UUIDHolder fetched = SantioUtils.Companion.getGSON().fromJson(json, UUIDHolder.class);
         
-        System.out.println(fetched);
         assert Objects.equals(uuid, fetched);
     }
     

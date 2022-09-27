@@ -40,7 +40,7 @@ object SQLiteAdapter: DatabaseAdapter {
         if (isSQLUnsafe(database) || isSQLUnsafe(table) || isSQLUnsafe(key)) return
         this.client?.schema = database
         createTable(table)
-        val statement = this.client?.prepareStatement("INSERT INTO $table (key, value) VALUES (?, ?)") ?: return
+        val statement = this.client?.prepareStatement("INSERT OR REPLACE INTO $table (key, value) VALUES (?, ?)") ?: return
 
         statement.setString(1, key)
         statement.setString(2, SantioUtils.GSON.toJson(value))
