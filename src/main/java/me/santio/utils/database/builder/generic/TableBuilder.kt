@@ -2,9 +2,9 @@ package me.santio.utils.database.builder.generic
 
 import me.santio.utils.database.Database
 
-class TableBuilder(
-    val table: String,
-    val database: String = "data"
+open class TableBuilder(
+    open val table: String,
+    open val database: String = "data"
 ) {
 
     fun <T> set(key: String, value: T) {

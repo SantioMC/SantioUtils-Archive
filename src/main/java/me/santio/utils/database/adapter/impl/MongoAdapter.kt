@@ -7,6 +7,7 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.ReplaceOptions
 import me.santio.utils.database.Storable
 import me.santio.utils.database.adapter.DatabaseAdapter
+import org.bson.Document
 import org.bson.UuidRepresentation
 import org.litote.kmongo.KMongo
 import org.litote.kmongo.*
@@ -72,6 +73,14 @@ object MongoAdapter: DatabaseAdapter {
             ?.find(Filters.eq("key", key))
             ?.first()
             ?.toJson()
+    }
+
+    fun getDocument(database: String, table: String, key: String): Document? {
+        return this.client
+            ?.getDatabase(database)
+            ?.getCollection(table)
+            ?.find(Filters.eq("key", key))
+            ?.first()
     }
 
 }

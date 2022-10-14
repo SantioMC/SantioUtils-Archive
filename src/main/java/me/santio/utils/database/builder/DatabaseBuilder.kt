@@ -6,6 +6,6 @@ abstract class DatabaseBuilder {
 
     var database = "data"
 
-    fun table(table: String): TableBuilder = TableBuilder(table, database)
+    open fun table(table: String): TableBuilder = TableBuilder(table, database)
 
 }
