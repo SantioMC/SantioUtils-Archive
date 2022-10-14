@@ -54,10 +54,7 @@ class CustomInventoryClickEvent(
 
         prevInventory.previous!!.next = null
         prevInventory.previous = null
-
-        Timer().schedule(object : TimerTask() {
-            override fun run() { prevInventory.delete() }
-        }, 100)
+        prevInventory.delete()
     }
 
     @Suppress("DEPRECATION")
@@ -87,3 +84,4 @@ class CustomInventoryClickEvent(
     override fun getResult(): Result = this.event.result
 
 }
+
