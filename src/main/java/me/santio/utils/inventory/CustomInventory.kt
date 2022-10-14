@@ -62,9 +62,6 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun deleteOnClose() = deleteOnClose
 
     fun onClick(event: InventoryClickEvent) {
-        println("Click event on inventory $id")
-        println("Found ${onClick.size} onClick events")
-        println("Click exists: ${onClick.containsKey(event.rawSlot)}")
         onClick[event.slot]?.accept(CustomInventoryClickEvent(event, this)) ?: run { event.isCancelled = true }
     }
 
@@ -84,10 +81,12 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun set(
         slot: Int,
         item: ItemStack,
-        onClick: Consumer<CustomInventoryClickEvent> = Consumer { it.isCancelled = true }
+        onClick: Consumer<CustomInventoryClickEvent>? = null,
+        keepEvent: Boolean = false
     ): CustomInventory {
         inventory.setItem(slot, item)
-        this.onClick[slot] = onClick
+        if (onClick != null) this.onClick[slot] = onClick
+        else if (!keepEvent) this.onClick.remove(slot)
         return this
     }
 
@@ -95,7 +94,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun set(
         slot: Slots,
         item: ItemStack,
-        onClick: Consumer<CustomInventoryClickEvent> = Consumer { it.isCancelled = true }
+        onClick: Consumer<CustomInventoryClickEvent>? = null
     ): CustomInventory {
         slot.apply(this).forEach { set(it, item, onClick) }
         return this
@@ -104,7 +103,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     @JvmOverloads
     fun add(
         item: ItemStack,
-        onClick: Consumer<CustomInventoryClickEvent> = Consumer { it.isCancelled = true }
+        onClick: Consumer<CustomInventoryClickEvent>? = null
     ): CustomInventory {
         val slot = inventory.firstEmpty()
         if (slot == -1) return this
@@ -155,10 +154,7 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     }
 
     fun import(slots: List<SlotData>): CustomInventory {
-        slots.forEach {
-            set(it.slot, it.item)
-            if (it.clickEvent != null) onClick[it.slot] = it.clickEvent
-        }
+        slots.forEach { set(it.slot, it.item, it.clickEvent) }
         return this
     }
 
@@ -189,7 +185,10 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         paginatedInventory.useSlots(slots)
         paginatedInventory.addItems(*clazz.enumConstants.filter(filter ?: { true }).map { handler.apply(it) }.toTypedArray())
         clazz.enumConstants.filter(filter ?: { true }).map { event.apply(it) }.forEachIndexed { index, consumer ->
-            slots.get(index)?.let { paginatedInventory.onClick[it] = consumer }
+            slots.get(index)?.let {
+                paginatedInventory.onClick[it] = consumer
+                paginatedInventory.setEvent(index / slots.size() + 1, it, consumer)
+            }
         }
         return paginatedInventory
     }

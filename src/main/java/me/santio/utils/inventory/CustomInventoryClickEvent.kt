@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
+import java.util.function.Consumer
 
 class CustomInventoryClickEvent(
     private val event: InventoryClickEvent,
@@ -56,7 +57,7 @@ class CustomInventoryClickEvent(
 
         Timer().schedule(object : TimerTask() {
             override fun run() { prevInventory.delete() }
-        }, 50)
+        }, 100)
     }
 
     @Suppress("DEPRECATION")

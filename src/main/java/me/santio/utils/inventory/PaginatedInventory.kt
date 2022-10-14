@@ -14,15 +14,18 @@ class PaginatedInventory(
     inv: CustomInventory
 ): CustomInventory(inv.rows(), inv.name) {
 
+    private val export: List<SlotData>
+
     init {
-        import(inv.export())
+        export = inv.export()
+        import(export)
         inv.delete()
         SantioUtils.inventories.add(this)
     }
 
     private var slots: Slots = Slots.ALL
     private var items: MutableList<ItemStack> = mutableListOf()
-    private var events: MutableMap<Int, MutableMap<Int, Consumer<CustomInventoryClickEvent>>> = mutableMapOf()
+    var events: MutableMap<Int, MutableMap<Int, Consumer<CustomInventoryClickEvent>>> = mutableMapOf()
     private var page: MutableMap<UUID, Int> = mutableMapOf()
     private var switchConsumers: MutableList<BiConsumer<PaginatedInventory, Int>> = mutableListOf()
 
@@ -35,12 +38,9 @@ class PaginatedInventory(
         this.page[player.uniqueId] = page
 
         // Paginate items
-        val paginatedItems = items.subList((page - 1) * slots.size(), (page * slots.size()).coerceAtMost(items.size))
-        println("Paginated items: ${paginatedItems.size}")
-        paginatedItems.forEachIndexed { index, item -> slots.get(index)?.let { set(it, item) }}
-        println("Slots with events: ${events.flatMap { it.value.keys }.toSet().size}")
         onClick = events[page] ?: mutableMapOf()
-        println("Loaded onClick events: ${onClick.size}")
+        val paginatedItems = items.subList((page - 1) * slots.size(), (page * slots.size()).coerceAtMost(items.size))
+        paginatedItems.forEachIndexed { index, item -> slots.get(index)?.let { set(it, item, keepEvent = true)}}
 
         // Add back and forward buttons
         if (page > 1) back?.let { set(it.first, it.second) { e ->
