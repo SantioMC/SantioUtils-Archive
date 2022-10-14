@@ -62,6 +62,9 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
     fun deleteOnClose() = deleteOnClose
 
     fun onClick(event: InventoryClickEvent) {
+        println("Click event on inventory $id")
+        println("Found ${onClick.size} onClick events")
+        println("Click exists: ${onClick.containsKey(event.rawSlot)}")
         onClick[event.slot]?.accept(CustomInventoryClickEvent(event, this)) ?: run { event.isCancelled = true }
     }
 
@@ -179,12 +182,13 @@ open class CustomInventory @JvmOverloads constructor(open val size: Int, var nam
         slots: Slots,
         clazz: Class<T>,
         handler: Function<T, CustomItem>,
-        event: Function<T, Consumer<CustomInventoryClickEvent>> = Function { Consumer { it.isCancelled = true } }
+        event: Function<T, Consumer<CustomInventoryClickEvent>> = Function { Consumer { it.isCancelled = true } },
+        filter: ((T) -> Boolean)? = null
     ): PaginatedInventory {
         val paginatedInventory = PaginatedInventory(this)
         paginatedInventory.useSlots(slots)
-        paginatedInventory.addItems(*clazz.enumConstants.map { handler.apply(it) }.toTypedArray())
-        clazz.enumConstants.map { event.apply(it) }.forEachIndexed { index, consumer ->
+        paginatedInventory.addItems(*clazz.enumConstants.filter(filter ?: { true }).map { handler.apply(it) }.toTypedArray())
+        clazz.enumConstants.filter(filter ?: { true }).map { event.apply(it) }.forEachIndexed { index, consumer ->
             slots.get(index)?.let { paginatedInventory.onClick[it] = consumer }
         }
         return paginatedInventory
