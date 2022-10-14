@@ -1,13 +1,13 @@
 package me.santio.utils.item
 
 import me.santio.utils.bukkit.Book
+import me.santio.utils.inventory.CustomInventoryClickEvent
 import me.santio.utils.text.colored
 import me.santio.utils.text.normalcase
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
@@ -46,13 +46,13 @@ class CustomItem @JvmOverloads constructor(
         size(size)
     }
 
-    private var onClick: Consumer<InventoryClickEvent>? = null
+    private var onClick: Consumer<CustomInventoryClickEvent>? = null
 
     fun name() = name ?: material.name.normalcase()
     fun lore() = itemMeta?.lore ?: emptyList()
     fun size() = amount
     fun skull() = (itemMeta as SkullMeta?)?.owningPlayer
-    fun onClick(event: InventoryClickEvent) = onClick?.accept(event) ?: run { event.isCancelled = true }
+    fun onClick(event: CustomInventoryClickEvent) = onClick?.accept(event) ?: run { event.isCancelled = true }
 
     fun color(): Color? {
         if (itemMeta is LeatherArmorMeta) return (itemMeta as LeatherArmorMeta).color
@@ -131,7 +131,7 @@ class CustomItem @JvmOverloads constructor(
         return this
     }
 
-    fun onClick(event: Consumer<InventoryClickEvent>): CustomItem {
+    fun onClick(event: Consumer<CustomInventoryClickEvent>): CustomItem {
         onClick = event
         return this
     }

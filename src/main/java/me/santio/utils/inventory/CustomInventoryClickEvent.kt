@@ -5,6 +5,7 @@ package me.santio.utils.inventory
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 class CustomInventoryClickEvent(
     private val event: InventoryClickEvent,
@@ -51,9 +52,11 @@ class CustomInventoryClickEvent(
         }
 
         prevInventory.previous!!.next = null
-
         prevInventory.previous = null
-        prevInventory.delete()
+
+        Timer().schedule(object : TimerTask() {
+            override fun run() { prevInventory.delete() }
+        }, 50)
     }
 
     @Suppress("DEPRECATION")
